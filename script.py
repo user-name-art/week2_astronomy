@@ -3,11 +3,12 @@ import os
 import requests
 
 
-def download_image(url, headers):
+def download_image(url, directory):
     response = requests.get(url, headers=headers)
     response.raise_for_status()
 
-    return response.content
+    with open(f'{directory}/{filename}', 'wb') as file:
+        file.write(response.content)
 
 
 if __name__ == '__main__':
@@ -18,10 +19,7 @@ if __name__ == '__main__':
 
     if not os.path.exists(directory):
         os.makedirs(directory)
-    
-    os.chdir(directory)
 
-    photo = download_image(url, headers)
+    download_image(url, directory)
 
-    with open(filename, 'wb') as file:
-        file.write(photo)
+
