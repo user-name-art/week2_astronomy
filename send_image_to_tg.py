@@ -3,7 +3,6 @@ import argparse
 
 import telegram
 import random
-import time
 
 from dotenv import load_dotenv
 from processing_filename import get_filenames_in_folder
@@ -17,15 +16,14 @@ if __name__ == '__main__':
     image_names = get_filenames_in_folder()
 
     bot = telegram.Bot(token=os.environ["TG_BOT_TOKEN"])
+    chat = os.environ["TG_CHAT"]
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('time', nargs='?', default=4)
-    hours_to_seconds = 3 * parser.parse_args().time
+    parser.add_argument('name', nargs='?')
 
-    while True:
-        for image in image_names:
-            bot.send_document(chat_id='@astronomy_tatarstan', document=open(f'{directory}/{image}', 'rb'))
-            time.sleep(hours_to_seconds)
+    if not parser.parse_args().name:
+        filename = random.choice(image_names)
+    else:
+        filename = parser.parse_args().name
 
-        random.shuffle(image_names)
-
+    bot.send_document(chat_id=chat, document=open(f'{directory}/{filename}', 'rb'))
