@@ -3,7 +3,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from image_extention import get_image_extension
+from processing_filename import get_image_extension
 
 
 def fetch_nasa_apod(url, directory, request_paramerts):

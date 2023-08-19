@@ -3,7 +3,7 @@ import argparse
 
 import requests
 
-from image_extention import get_image_extension
+from processing_filename import get_image_extension
 
 
 def fetch_spacex_launch(url, directory, headers, launch_id):
