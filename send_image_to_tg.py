@@ -18,12 +18,9 @@ if __name__ == '__main__':
     bot = telegram.Bot(token=os.environ["TG_BOT_TOKEN"])
     chat = os.environ["TG_CHAT"]
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('name', nargs='?')
+    parser = argparse.ArgumentParser(description='Скрипт отправляет фотографию из папки images в Telegram-канал.')
+    parser.add_argument('name', nargs='?', default=random.choice(image_names), help='имя файла (опционально)')
+    filename = parser.parse_args().name
 
-    if not parser.parse_args().name:
-        filename = random.choice(image_names)
-    else:
-        filename = parser.parse_args().name
-
-    bot.send_document(chat_id=chat, document=open(f'{directory}/{filename}', 'rb'))
+    with open(f'{directory}/{filename}', 'rb') as file:
+        bot.send_document(chat_id=chat, document=file)

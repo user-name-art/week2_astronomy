@@ -3,23 +3,18 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from processing_filename import get_image_extension
+from processing_filename import get_and_save_image
 
 
-def fetch_nasa_apod(url, directory, request_paramerts):
+def main(url, directory, request_paramerts):
     response = requests.get(url, params=request_paramerts)
+    response.raise_for_status()
 
     apod = response.json()
+    filename_template = 'nasa_apod_'
 
-    for number, day in enumerate(apod):
-        response = requests.get(day['url'])
-        response.raise_for_status()
-
-        image_extention = get_image_extension(day['url'])
-
-        if image_extention:
-            with open(f'{directory}/nasa_apod_{number}{image_extention}', 'wb') as file:
-                file.write(response.content)
+    for picture_number, picture in enumerate(apod):
+        get_and_save_image(picture['url'], directory, picture_number, filename_template)
 
 
 if __name__ == '__main__':
@@ -33,8 +28,7 @@ if __name__ == '__main__':
     directory = 'images'
     nasa_apod_url = 'https://api.nasa.gov/planetary/apod'
 
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    os.makedirs(directory, exist_ok=True)
         
-    fetch_nasa_apod(nasa_apod_url, directory, nasa_apod_request_paramerts)  
+    main(nasa_apod_url, directory, nasa_apod_request_paramerts)  
 
