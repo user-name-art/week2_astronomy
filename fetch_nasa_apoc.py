@@ -3,32 +3,35 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from processing_filename import get_and_save_image
+from processing_filename import get_image_by_url, get_image_extension, save_image
 
 
-def main(url, directory, request_paramerts):
-    response = requests.get(url, params=request_paramerts)
-    response.raise_for_status()
-
-    apod = response.json()
-    filename_template = 'nasa_apod_'
-
-    for picture_number, picture in enumerate(apod):
-        get_and_save_image(picture['url'], directory, picture_number, filename_template)
-
-
-if __name__ == '__main__':
+def main():
     load_dotenv()
 
-    nasa_apod_request_paramerts = {
+    directory = 'images'
+    nasa_apod_url = 'https://api.nasa.gov/planetary/apod'
+    filename_template = 'nasa_apod_'
+    nasa_apod_request_parametrs = {
         'api_key': {os.environ["NASA_TOKEN"]},
         'count': 10,
     }
 
-    directory = 'images'
-    nasa_apod_url = 'https://api.nasa.gov/planetary/apod'
-
     os.makedirs(directory, exist_ok=True)
-        
-    main(nasa_apod_url, directory, nasa_apod_request_paramerts)  
+
+    response = requests.get(nasa_apod_url, params=nasa_apod_request_parametrs)
+    response.raise_for_status()
+
+    apod = response.json()
+
+    for picture_number, picture in enumerate(apod):
+        image = get_image_by_url(picture['url'], nasa_apod_request_parametrs)
+        image_extension = get_image_extension(picture['url'])
+
+        if image_extension:
+            save_image(image, directory, filename_template, picture_number, image_extension)
+
+
+if __name__ == '__main__':
+    main()  
 

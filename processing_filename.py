@@ -19,12 +19,13 @@ def get_filenames_in_folder():
     return file_names
 
 
-def get_and_save_image(photo_url, directory, number, filename_template, params=None):
+def get_image_by_url(photo_url, params=None):
     response = requests.get(photo_url, params=params)
     response.raise_for_status()
 
-    image_extention = get_image_extension(photo_url)
+    return response.content
 
-    if image_extention: 
-        with open(f'{directory}/{filename_template}{number}{image_extention}', 'wb') as file:
-            file.write(response.content)
+
+def save_image(image, directory, filename_template, number, image_extension):
+    with open(f'{directory}/{filename_template}{number}{image_extension}', 'wb') as file:
+        file.write(image)
