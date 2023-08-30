@@ -7,7 +7,7 @@
 git clone https://github.com/user-name-art/week2_astronomy.git
 ```
 
-Вам понадобится файл **.env** с токенами. В качестве примера смортрите файл **.env.template**.
+Вам понадобится файл **.env** с токенами. В качестве примера смотрите файл **.env.template**.
 
 * **NASA_TOKEN**: токен используется для доступа по API к сайту [NASA](https://api.nasa.gov/).
 
